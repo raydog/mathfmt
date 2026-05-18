@@ -1,0 +1,48 @@
+{
+  "name": "mathfmt",
+  "version": "0.1.0-beta",
+  "description": "A tiny ASCIIMath renderer.",
+  "keywords": [
+    "asciimath",
+    "asciimathml",
+    "math",
+    "formula",
+    "equations",
+    "MathML"
+  ],
+  "author": "Ray Myers",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raydog/mathfmt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/raydog/mathfmt/issues"
+  },
+  "mocha": {
+    "extension": "ts",
+    "node-option": "import=tsx",
+    "watchExtension": "ts"
+  },
+  "scripts": {
+    "build": "node .esbuild/build.mts",
+    "clean": "rm -rf build",
+    "dev": "node .esbuild/build.mts --serve",
+    "prettier": "prettier -c .",
+    "regen:readme": "tsx src/entrypoints/RefreshReadmeLangSection.ts ./README.md",
+    "test": "mocha src/**/*.test.ts",
+    "test:one": "mocha",
+    "tsc": "tsc"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.9.1",
+    "earl": "^2.0.0",
+    "esbuild": "^0.28.0",
+    "mocha": "^11.7.6",
+    "prettier": "^3.8.3",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+  <head>
+    <script
+      src="https://code.jquery.com/jquery-4.0.0.slim.min.js"
+      integrity="sha256-8DGpv13HIm+5iDNWw1XqxgFB4mj+yOKFNb+tHBZOowc="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.4/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.4/beautify-html.min.js"></script>
+    <script src="/js/dev.js"></script>
+  </head>
+  <style>
+    #input {
+      width: 100%;
+      box-sizing: border-box;
+      min-height: 8em;
+      font-family: "Courier New", Courier, monospace;
+    }
+    #out {
+      border: 1px dashed black;
+      padding: 0.5em;
+      min-height: 8em;
+    }
+    #out-html,
+    #out-ast {
+      border: 1px dashed black;
+      margin-top: 1em;
+      max-height: 40em;
+      overflow-y: scroll;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="row">
+        <h1>MathFmt</h1>
+      </div>
+      <div class="row py-2">
+        <div class="col">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="setText('x = (-b +- sqrt(b^2 - 4ac)) / (2a)')"
+          >
+            Quadratic
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="
+              setText('sum_(n=0)^oo 1/2^n = lim_(x->oo)(2^x-1)/2^(x-1) = 2')
+            "
+          >
+            Sum as Limit
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="setText('DeltaE = (M - E_n + e*sin E_n)/(1 - e*cos E_n)')"
+          >
+            Kepler Delta E
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="
+              setText('sum_(k=1)^n k^3=1^3 + 2^3 + ... + n^3 = [(n(n+1))/2]^2')
+            "
+          >
+            Sum Cubes
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="setText('Phi(x) = 1/(sqrt(2pi rho))e^{(x-mu)^2/(2rho^2)}')"
+          >
+            Normal Dist
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="setText('f(omega) = int_oo^inftyf(x)e^{-2pi i x omega}dx')"
+          >
+            Fourier
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="
+              setText(
+                '1/2sigma^2S^2(del^2V)/(delS^2)+rS(delV)/(delS)+(delV)/(delt)-rV = 0',
+              )
+            "
+          >
+            Black-Scholes
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="
+              setText(
+                'root3(-q/2+sqrt(q^2/4+p^3/27))+root3(-q/2-sqrt(q^2/4+p^3/27))',
+              )
+            "
+          >
+            Cardano
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="
+              setText(
+                'abs(sum_{k=1}^n u_k barv_k)^2 <= (sum_{k=1}^n abs(u_k))^2(sum_{k=1}^n abs(barv_k))^2',
+              )
+            "
+          >
+            Cauchy-Bunyakovsky-Schwarz
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="
+              setText(
+                '|(1,x_1,x_1^2,cdots,x_1^{n-1}),(1,x_2,x_2^2,cdots,x_2^{n-1}),(1,x_3,x_3^2,cdots,x_3^{n-1}),(vdots,vdots,vdots, ddots,vdots),(1, x_n, x_n^2, cdots, x_n^{n-1})| = prod_{1<=i,j<=n}(x_i-x_j)',
+              )
+            "
+          >
+            Vandermonde
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="setText('ihbarpartial/{partialt}Psi(r,t) = hatH Psi(r,t)')"
+          >
+            Schrödinger
+          </button>
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            onclick="setText(TORTURE_TEST)"
+          >
+            ASCIIMath Smorgasbord
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <textarea id="input"></textarea>
+          <pre id="out-ast"></pre>
+        </div>
+        <div class="col">
+          <div id="out"></div>
+          <pre id="out-html"></pre>
+          <div id="out-ms"></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      var TORTURE_TEST = `
+(
+  (ul bbb"All symbols defined in ASCIIMathML.js"),
+  (""),
+  (obrace(alpha beta chi delta Delta epsi epsilon varepsilon eta gamma Gamma iota kappa lambda Lambda lamda Lamda mu nu omega Omega phi varphi Phi pi Pi psi Psi rho sigma Sigma tau theta vartheta Theta upsilon xi Xi zeta)^"Greek Symbols"),
+  (obrace(* ** *** // \\ setminus xx |>< ><| |><| -: divide @ o+ o- ox o. sum prod ^^ ^^^ vv vvv nn nnn uu uuu dag ddag)^"binary operations"),
+  (obrace(cdot ast star backslash times ltimes rtimes bowtie div circ oplus ominus otimes odot wedge bigwedge vee bigvee cap bigcap cup bigcup dagger ddagger)^"binary operations (TeX)"),
+  (obrace(!= := lt <= lt= gt mlt >= gt= mgt -< -lt >- -<= >-= in !in sub !sub notsubset sup !sup notsupset sube !sube notsubseteq supe !supe notsupseteq -= !-= notequiv ~= ~~ ~ prop)^"binary relations"),
+  (obrace(ne le leq ll ge geq gg prec succ preceq succeq notin subset notsubset supset notsupset subseteq notsubseteq supseteq notsupseteq equiv notequiv cong approx sim propto)^"binary relations (TeX)"),
+  (obrace(and or not => if <=> AA EE _|_ TT |-- |== neg implies iff forall exists bot top vdash models)^"logical symbols"),
+  (obrace((a+b) left(a+bright) [a+b] left[a+bright] {a+b} |a+b| :|: |:a+b:| (:a+b:) langlea+brangle <<a+b>> {:a+b:})^"grouping brackets"),
+  (obrace(int dx dy dz dt oint del grad +- -+ O/ oo aleph [...] :. :' /_ /_\ ' tilde(x) \  frown [quad] [qquad] [enspace] [thinspace] [mspace] [cdots] [vdots] [ddots] diamond square |__ __| |~ ~| CC NN QQ RR ZZ f g hbar)^"miscellaneous symbols"),
+  (obrace(partial nabla pm mp emptyset infty ldots therefore because angle triangle prime lfloor rfloor lceiling rceiling)^"miscellaneous symbols (TeX)"),
+  (obrace(Lim x Arcsin x Arccos x Arctan x Sinh x Cosh x Tanh x Sin x Cos x Tan x Cot x Sec x Csc x Log x Ln x)^"standard functions (upper)"),
+  (obrace(sin x cos x tan x sinh x cosh x tanh x cot x sec x csc x arcsin x arccos x arctan x arcsec x arccsc x arccot x coth x sech x csch x)^"standard functions (trig)"),
+  (obrace(lim x exp x log x ln x det x dim x mod x gcd x lcm x lub x glb x min x max x)^"standard functions (other)"),
+  (obrace(uarr darr rarr -> >-> ->> >->> |-> larr <- harr rArr lArr dArr hArr rightleftharpoons uparrow downarrow rightarrow to rightarrowtail twoheadrightarrow twoheadrightarrowtail mapsto leftarrow leftrightarrow Rightarrow Leftarrow Downarrow Leftrightarrow)^"arrows"),
+  (obrace(sqrt x hat x bar x vec x dot x ddot x overarc x ul x cancel x root x y frac x y stackrel x y overset x y underset x y color "red" bb"Y" id (x) y class (x) y ubrace x_"foo" obrace x^"bar" text (test1) mbox (test2))^"unary / binary commands"),
+  (obrace([bb "Abc"][sf "Abc"][sfit "Abc"][bbsf "Abc"][bbb "Abc"][cc "Abc"][bbcc "Abc"][tt "Abc"][fr "Abc"][bbfr "Abc"][bbit "Abc"][bbsfit "Abc"][italic "Abc"][mathbf "Abc"][mathsf "Abc"][mathbb "Abc"][mathtt "Abc"][mathfrak "Abc"][mathit "Abc"])^"Font Commands"),
+  (obrace(sum_x^y prod_x^y ^^^_x^y vvv_x^y nnn_x^y uuu_x^y lim_x^y Lim_x^y min_x^y max_x^y bigwedge_x^y bigvee_x^y bigcap_x^y bigcup_x^y)^"stacked ops")
+)`.trim();
+
+      $(function () {
+        refresh();
+        $("#input").on("change keyup paste", refresh);
+      });
+
+      function setText(str) {
+        $("#input").val(str);
+        refresh();
+      }
+
+      function refresh() {
+        try {
+          const data = $("#input").val();
+          const now = Date.now();
+          const html = MathFmt.intoMathML(data);
+          const ast = MathFmt.parseTree(data);
+          const took = Date.now() - now;
+          $("#out").html(html);
+          $("#out-ast").text(prettyAST(ast));
+          $("#out-html").text(prettyHTML(html));
+          $("#out-ms").text(`Took: ${took} ms`);
+        } catch (ex) {
+          console.error(ex);
+          const $error = $('<div class="alert alert-danger"></div>');
+          $error.text(String(ex));
+          $("#out-ms").empty().append($error);
+        }
+      }
+
+      function prettyAST(ast) {
+        const json = JSON.stringify(ast);
+        let purty = js_beautify(json, {
+          indent_size: 2,
+          space_in_empty_paren: true,
+          brace_style: "expand",
+          keep_array_indentation: true,
+        });
+
+        // js_beautify plops new object on newlines ALWAYS. Collapse new objects
+        // immediately after a : to one space away.
+        purty = purty.replace(/":\s+\{/g, '": {');
+
+        purty = purty.replace(/("typ": )(\d+)/g, (full, key, val) => {
+          return key + MathFmt.tokenFlags(Number(val)).join(" | ");
+        });
+
+        return purty;
+      }
+
+      function prettyHTML(str) {
+        return html_beautify(str, {
+          indent_size: 2,
+        });
+      }
+    </script>
+  </body>
+</html>
