@@ -127,7 +127,6 @@ export default function renderToMathML(
     .addAttr("style", opts.style ?? null)
     .addAttr("display", opts.inline ? "inline" : "block");
 
-  // console.log(math);
   return math.html();
 }
 
@@ -434,7 +433,6 @@ function handleToken(
       stretchy = false;
     }
 
-    const attr = stretchy != null ? ` stretchy="${stretchy}"` : "";
     let value = tok.str ?? tok.sym ?? "";
     // Hack for "|:", ":|", and ":|:" symbols, as result in the same text:
     if (value === "|:" || value === ":|" || value === ":|:") {
@@ -444,8 +442,8 @@ function handleToken(
     if (value.trim() === "") {
       return new Node("mspace").addAttr("width", value.length * 0.25 + "em");
     }
-
-    return new Node("mo", [stringFn(value)]);
+    return new Node("mo", [stringFn(value)])
+      .addAttr("stretchy", stretchy ? "true" : "");
   }
 
   if (typ & ID_FLAG) {
