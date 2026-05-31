@@ -106,6 +106,7 @@ async function prepareNPMDirectory(dest: string) {
   const packageJSON = JSON.parse(await fs.readFile("./package.json", "utf8"));
   const updatedJSON = {
     ...packageJSON,
+    main: "./MathFmt-node.mjs",
     types: "./MathFmt.node.d.ts",
     scripts: undefined,
     mocha: undefined,

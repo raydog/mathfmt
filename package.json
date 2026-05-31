@@ -12,7 +12,7 @@
   ],
   "author": "Ray Myers",
   "license": "MIT",
-  "main": "index.js",
+  "main": "src/entrypoints/MathFmt.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/raydog/mathfmt.git"
