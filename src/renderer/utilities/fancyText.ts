@@ -7,59 +7,59 @@
  * ]
  */
 type UnicodeFont = {
-  latin?: [number, number, Record<number, string>?, Record<number, string>?];
-  greek?: [number, number, Record<number, string>?, Record<number, string>?];
-  digit?: number;
+  _latin?: [number, number, Record<number, string>?, Record<number, string>?];
+  _greek?: [number, number, Record<number, string>?, Record<number, string>?];
+  _digit?: number;
 };
 
 // Note: These tables from: https://en.wikipedia.org/wiki/Mathematical_Alphanumeric_Symbols
 // Bless you, Wikipedia. <3
 
 const SerifBold: UnicodeFont = {
-  latin: [0x1d400, 0x1d41a],
-  greek: [0x1d6a8, 0x1d6c2],
-  digit: 0x1d7ce,
+  _latin: [0x1d400, 0x1d41a],
+  _greek: [0x1d6a8, 0x1d6c2],
+  _digit: 0x1d7ce,
 };
 const SerifItalic: UnicodeFont = {
-  latin: [0x1d434, 0x1d44e, {}, { 7: "ℎ" }],
-  greek: [0x1d6e2, 0x1d6fc],
+  _latin: [0x1d434, 0x1d44e, {}, { 7: "ℎ" }],
+  _greek: [0x1d6e2, 0x1d6fc],
 };
 const SerifBoldItalic: UnicodeFont = {
-  latin: [0x1d468, 0x1d482],
-  greek: [0x1d71c, 0x1d736],
+  _latin: [0x1d468, 0x1d482],
+  _greek: [0x1d71c, 0x1d736],
 };
-const SansNormal: UnicodeFont = { latin: [0x1d5a0, 0x1d5ba], digit: 0x1d7e2 };
+const SansNormal: UnicodeFont = { _latin: [0x1d5a0, 0x1d5ba], _digit: 0x1d7e2 };
 const SansBold: UnicodeFont = {
-  latin: [0x1d5d4, 0x1d5ee],
-  greek: [0x1d756, 0x1d770],
-  digit: 0x1d7ec,
+  _latin: [0x1d5d4, 0x1d5ee],
+  _greek: [0x1d756, 0x1d770],
+  _digit: 0x1d7ec,
 };
-const SansItalic: UnicodeFont = { latin: [0x1d608, 0x1d622] };
+const SansItalic: UnicodeFont = { _latin: [0x1d608, 0x1d622] };
 const SansBoldItalic: UnicodeFont = {
-  latin: [0x1d63c, 0x1d656],
-  greek: [0x1d790, 0x1d7aa],
+  _latin: [0x1d63c, 0x1d656],
+  _greek: [0x1d790, 0x1d7aa],
 };
 const ScriptNormal: UnicodeFont = {
-  latin: [
+  _latin: [
     0x1d49c,
     0x1d4b6,
     { 1: "ℬ", 4: "ℰ", 5: "ℱ", 7: "ℋ", 8: "ℐ", 11: "ℒ", 12: "ℳ", 17: "ℛ" },
     { 4: "ℯ", 6: "ℊ", 14: "ℴ" },
   ],
 };
-const ScriptBold: UnicodeFont = { latin: [0x1d4d0, 0x1d4ea] };
+const ScriptBold: UnicodeFont = { _latin: [0x1d4d0, 0x1d4ea] };
 const FrakturNormal: UnicodeFont = {
-  latin: [0x1d504, 0x1d51e, { 2: "ℭ", 7: "ℌ", 8: "ℑ", 17: "ℜ", 25: "ℨ" }],
+  _latin: [0x1d504, 0x1d51e, { 2: "ℭ", 7: "ℌ", 8: "ℑ", 17: "ℜ", 25: "ℨ" }],
 };
-const FrakturBold: UnicodeFont = { latin: [0x1d56c, 0x1d586] };
-const Monospace: UnicodeFont = { latin: [0x1d670, 0x1d68a], digit: 0x1d7f6 };
+const FrakturBold: UnicodeFont = { _latin: [0x1d56c, 0x1d586] };
+const Monospace: UnicodeFont = { _latin: [0x1d670, 0x1d68a], _digit: 0x1d7f6 };
 const DoubleStruck: UnicodeFont = {
-  latin: [
+  _latin: [
     0x1d538,
     0x1d552,
     { 2: "ℂ", 7: "ℍ", 13: "ℕ", 15: "ℙ", 16: "ℚ", 17: "ℝ", 25: "ℤ" },
   ],
-  digit: 0x1d7d8,
+  _digit: 0x1d7d8,
 };
 
 const FONTS = {
@@ -96,30 +96,30 @@ export function formatText(font: FontName, str: string): string {
 }
 
 function transformChar(
-  { latin, greek, digit }: UnicodeFont,
+  { _latin, _greek, _digit }: UnicodeFont,
   ch: string,
 ): string {
   const code = ch.charCodeAt(0);
   let idx: number | null;
-  if (latin != null) {
+  if (_latin != null) {
     if ((idx = upperLatinIdx(code)) != null) {
-      return (latin[2] && latin[2][idx]) ?? unicodeChar(latin[0] + idx);
+      return (_latin[2] && _latin[2][idx]) ?? unicodeChar(_latin[0] + idx);
     }
     if ((idx = lowerLatinIdx(code)) != null) {
-      return (latin[3] && latin[3][idx]) ?? unicodeChar(latin[1] + idx);
+      return (_latin[3] && _latin[3][idx]) ?? unicodeChar(_latin[1] + idx);
     }
   }
-  if (digit != null) {
+  if (_digit != null) {
     if ((idx = digitIdx(code)) != null) {
-      return unicodeChar(digit + idx);
+      return unicodeChar(_digit + idx);
     }
   }
-  if (greek != null) {
+  if (_greek != null) {
     if ((idx = upperGreekIdx(code)) != null) {
-      return (greek[2] && greek[2][idx]) ?? unicodeChar(greek[0] + idx);
+      return (_greek[2] && _greek[2][idx]) ?? unicodeChar(_greek[0] + idx);
     }
     if ((idx = lowerGreekIdx(code)) != null) {
-      return (greek[3] && greek[3][idx]) ?? unicodeChar(greek[1] + idx);
+      return (_greek[3] && _greek[3][idx]) ?? unicodeChar(_greek[1] + idx);
     }
   }
   // Else, no change.

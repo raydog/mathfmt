@@ -110,7 +110,7 @@ export class Lang {
   private sym: Map<string, [string, SymInfo][]> = new Map();
 
   constructor() {
-    this.addSymbols(ID_FLAG, [
+    this._addSymbols(ID_FLAG, [
       ["α", "alpha"],
       ["β", "beta"],
       ["γ", "gamma"],
@@ -185,9 +185,9 @@ export class Lang {
       ["ℏ", "hbar"],
     ]);
 
-    this.addSymbols(OP_FLAG, [","]);
+    this._addSymbols(OP_FLAG, [","]);
 
-    this.addSymbols(OP_FLAG, [
+    this._addSymbols(OP_FLAG, [
       // Operation symbols:
       "^",
       "_",
@@ -303,7 +303,7 @@ export class Lang {
       ["⇌", "rightleftharpoons"],
     ]);
 
-    this.addSymbols(LBRACK_FLAG | STRETCHY_FLAG | OP_FLAG, [
+    this._addSymbols(LBRACK_FLAG | STRETCHY_FLAG | OP_FLAG, [
       ["(", "left("],
       ["[", "left["],
       "{",
@@ -311,11 +311,11 @@ export class Lang {
       ["⟨", "langle", "<<", "(:"], // 0x2329 -> 0x27e8 as it's the math version
     ]);
 
-    this.addSymbols(LBRACK_FLAG | STRETCHY_FLAG | FORCE_HIDE_FLAG | OP_FLAG, [
+    this._addSymbols(LBRACK_FLAG | STRETCHY_FLAG | FORCE_HIDE_FLAG | OP_FLAG, [
       "{:",
     ]);
 
-    this.addSymbols(RBRACK_FLAG | STRETCHY_FLAG | OP_FLAG, [
+    this._addSymbols(RBRACK_FLAG | STRETCHY_FLAG | OP_FLAG, [
       [")", "right)"],
       ["]", "right]"],
       "}",
@@ -323,16 +323,16 @@ export class Lang {
       ["⟩", "rangle", ">>", ":)"], // 0x232a -> 0x27e9
     ]);
 
-    this.addSymbols(RBRACK_FLAG | STRETCHY_FLAG | FORCE_HIDE_FLAG | OP_FLAG, [
+    this._addSymbols(RBRACK_FLAG | STRETCHY_FLAG | FORCE_HIDE_FLAG | OP_FLAG, [
       ":}",
     ]);
 
-    this.addSymbols(
+    this._addSymbols(
       SYM_BRACK_FLAG | STRETCHY_FLAG | FORCE_SHOW_FLAG | OP_FLAG,
       ["|"],
     );
 
-    this.addSymbols(UNARY_FLAG | OP_FLAG, [
+    this._addSymbols(UNARY_FLAG | OP_FLAG, [
       // Formatting unaries:
       "sqrt",
       ["abs", "Abs"],
@@ -351,7 +351,7 @@ export class Lang {
       ["text", "mbox"],
     ]);
 
-    this.addSymbols(UNARY_FLAG | FUNC_FLAG | OP_FLAG, [
+    this._addSymbols(UNARY_FLAG | FUNC_FLAG | OP_FLAG, [
       "sin",
       "Sin",
       "cos",
@@ -397,12 +397,12 @@ export class Lang {
       "glb",
     ]);
 
-    this.addSymbols(STACKED_FLAG | UNARY_FLAG | OP_FLAG, [
+    this._addSymbols(STACKED_FLAG | UNARY_FLAG | OP_FLAG, [
       ["ubrace", "underbrace"],
       ["obrace", "overbrace"],
     ]);
 
-    this.addSymbols(FONT_FLAG | FORCE_HIDE_FLAG | UNARY_FLAG | OP_FLAG, [
+    this._addSymbols(FONT_FLAG | FORCE_HIDE_FLAG | UNARY_FLAG | OP_FLAG, [
       ["bb", "mathbf"],
       ["bbb", "mathbb"],
       ["cc", "mathcal"],
@@ -418,7 +418,7 @@ export class Lang {
       ["italic", "mathit"],
     ]);
 
-    this.addSymbols(BINARY_FLAG | OP_FLAG, [
+    this._addSymbols(BINARY_FLAG | OP_FLAG, [
       "root",
       "frac",
       "color",
@@ -428,7 +428,7 @@ export class Lang {
       "class",
     ]);
 
-    this.addSymbols(STACKED_FLAG | STRETCHY_FLAG | OP_FLAG, [
+    this._addSymbols(STACKED_FLAG | STRETCHY_FLAG | OP_FLAG, [
       ["∑", "sum"],
       ["∏", "prod"],
       ["⋀", "^^^", "bigwedge"],
@@ -437,14 +437,14 @@ export class Lang {
       ["⋃", "uuu", "bigcup"],
     ]);
 
-    this.addSymbols(STRETCHY_FLAG | OP_FLAG, [
+    this._addSymbols(STRETCHY_FLAG | OP_FLAG, [
       ["∫", "int"],
       ["∮", "oint"],
     ]);
 
-    this.addSymbols(STACKED_FLAG | OP_FLAG, ["lim", "Lim", "min", "max"]);
+    this._addSymbols(STACKED_FLAG | OP_FLAG, ["lim", "Lim", "min", "max"]);
 
-    this.sortAllSymbols();
+    this._sortAllSymbols();
   }
 
   *iter(): Iterable<[string, SymInfo]> {
@@ -477,7 +477,7 @@ export class Lang {
     return [0, null];
   }
 
-  private sortAllSymbols() {
+  private _sortAllSymbols() {
     for (const list of this.sym.values()) {
       list.sort(cmpStrLen);
     }
@@ -490,7 +490,7 @@ export class Lang {
    * @param typ
    * @param names
    */
-  private addSymbols(typ: number, names: NameSet[]) {
+  private _addSymbols(typ: number, names: NameSet[]) {
     for (const current of names) {
       const array = Array.isArray(current) ? current : [current];
       const tok = array[0]!;

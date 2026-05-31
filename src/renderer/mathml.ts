@@ -48,7 +48,7 @@ class Node {
     this.children = children;
   }
 
-  addAttr(name: string, value: string | null): Node {
+  _addAttr(name: string, value: string | null): Node {
     if (value) {
       this.attributes.push([name, value]);
     }
@@ -122,10 +122,10 @@ export default function renderToMathML(
   const ctx: RenderCtx = { src, stringFn: String };
   const terms = ast.terms.map((t) => handleTerm(ctx, t));
   const math = new Node("math", terms)
-    .addAttr("id", opts.id ?? null)
-    .addAttr("class", opts.class ?? null)
-    .addAttr("style", opts.style ?? null)
-    .addAttr("display", opts.inline ? "inline" : "block");
+    ._addAttr("id", opts.id ?? null)
+    ._addAttr("class", opts.class ?? null)
+    ._addAttr("style", opts.style ?? null)
+    ._addAttr("display", opts.inline ? "inline" : "block");
 
   return math.html();
 }
@@ -247,7 +247,7 @@ function handleMatrix(ctx: RenderCtx, m: AstMatrix): Node {
   }
   return new Node("mrow", [
     l,
-    new Node("mtable", rows).addAttr("spacing", spacing),
+    new Node("mtable", rows)._addAttr("spacing", spacing),
     r,
   ]);
 }
@@ -323,7 +323,7 @@ function unaryOver(
   over: string,
 ): Node {
   const a = base ? handleSimp(ctx, base, true) : "";
-  return new Node("mover", [a, new Node("mo", [over])]).addAttr(
+  return new Node("mover", [a, new Node("mo", [over])])._addAttr(
     "accent",
     "true",
   );
@@ -335,7 +335,7 @@ function unaryUnder(
   under: string,
 ): Node {
   const a = base ? handleSimp(ctx, base, true) : "";
-  return new Node("munder", [a, new Node("mo", [under])]).addAttr(
+  return new Node("munder", [a, new Node("mo", [under])])._addAttr(
     "accentunder",
     "true",
   );
@@ -343,7 +343,7 @@ function unaryUnder(
 
 function unaryCancel(ctx: RenderCtx, base: AstSimp | undefined): Node {
   const a = base ? handleSimp(ctx, base, true) : "";
-  return new Node("menclose", [a]).addAttr("notation", "updiagonalstrike");
+  return new Node("menclose", [a])._addAttr("notation", "updiagonalstrike");
 }
 
 function handleBinary(ctx: RenderCtx, ast: AstBinary): Node {
@@ -358,7 +358,7 @@ function handleBinary(ctx: RenderCtx, ast: AstBinary): Node {
         break;
       }
       const main = b ? handleSimp(ctx, b, true) : "";
-      return new Node("mstyle", [main]).addAttr("mathcolor", color);
+      return new Node("mstyle", [main])._addAttr("mathcolor", color);
     }
     case "root":
       return binaryStack(ctx, "mroot", b, a);
@@ -371,12 +371,12 @@ function handleBinary(ctx: RenderCtx, ast: AstBinary): Node {
     case "id": {
       const id = argString(ctx, a);
       const main = b ? handleSimp(ctx, b, true) : "";
-      return new Node("mrow", [main]).addAttr("id", id);
+      return new Node("mrow", [main])._addAttr("id", id);
     }
     case "class": {
       const classname = argString(ctx, a);
       const main = b ? handleSimp(ctx, b, true) : "";
-      return new Node("mrow", [main]).addAttr("class", classname);
+      return new Node("mrow", [main])._addAttr("class", classname);
     }
   }
   // Fallback:
@@ -440,10 +440,12 @@ function handleToken(
     }
     // Whitespace operators:
     if (value.trim() === "") {
-      return new Node("mspace").addAttr("width", value.length * 0.25 + "em");
+      return new Node("mspace")._addAttr("width", value.length * 0.25 + "em");
     }
-    return new Node("mo", [stringFn(value)])
-      .addAttr("stretchy", stretchy ? "true" : "");
+    return new Node("mo", [stringFn(value)])._addAttr(
+      "stretchy",
+      stretchy ? "true" : "",
+    );
   }
 
   if (typ & ID_FLAG) {
