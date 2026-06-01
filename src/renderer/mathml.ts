@@ -50,7 +50,7 @@ class Node {
 
   _addAttr(name: string, value: string | null): Node {
     if (value) {
-      this.attributes.push([name, value]);
+      this.attributes.push([name, String(value)]);
     }
     return this;
   }
@@ -444,7 +444,7 @@ function handleToken(
     }
     return new Node("mo", [stringFn(value)])._addAttr(
       "stretchy",
-      stretchy ? "true" : "",
+      stretchy ? "true" : null,
     );
   }
 

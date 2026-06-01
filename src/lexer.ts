@@ -33,6 +33,7 @@ const STRING_RE = /^(?:"[^"]*")+/;
 export function lexer(lang: Lang, src: string): Token[] {
   const out: Token[] = [];
   let idx = 0;
+  src = String(src ?? "");
 
   function _step(n: number) {
     idx += n;
