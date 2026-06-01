@@ -31,7 +31,7 @@
     "dev": "node .esbuild/build.mts --serve",
     "prettier": "prettier -c .",
     "regen:readme": "tsx src/entrypoints/RefreshReadmeLangSection.ts ./README.md",
-    "test": "mocha src/**/*.test.ts",
+    "test": "mocha \"src/**/*.test.ts\"",
     "test:one": "mocha",
     "tsc": "tsc"
   },
