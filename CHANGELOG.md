@@ -15,7 +15,7 @@ Changes will be broken down by category:
 - `Security` in case of vulnerabilities.
 - `Internal` for internal improvements.
 
-## [Unreleased]
+## [v0.1.2-beta]
 
 ### Fixed
 

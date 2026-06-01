@@ -1,6 +1,6 @@
 {
   "name": "mathfmt",
-  "version": "0.1.1",
+  "version": "0.1.2-deploy-test",
   "description": "A tiny ASCIIMath renderer.",
   "keywords": [
     "asciimath",
@@ -30,6 +30,7 @@
     "clean": "rm -rf build",
     "dev": "node .esbuild/build.mts --serve",
     "prettier": "prettier -c .",
+    "ops:get-changelog": "tsx src/scripts/PickChangelogEntry.ts",
     "regen:readme": "tsx src/entrypoints/RefreshReadmeLangSection.ts ./README.md",
     "test": "mocha \"src/**/*.test.ts\"",
     "test:one": "mocha",
