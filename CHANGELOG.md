@@ -17,6 +17,8 @@ Changes will be broken down by category:
 
 ## [Unreleased]
 
+## [v0.1.2] - 2026-06-27
+
 ### Fixed
 
 - "Stretchy" modifier was being ignored for some math operators.
