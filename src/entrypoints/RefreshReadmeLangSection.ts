@@ -22,7 +22,7 @@ const processSpawnPromise = promisify(child_process.spawn);
 
 const GREEK = "ΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡϴΣΤΥΦΧΨΩ∇αβγδεɛζηθικλμνξοπρςστυφχψω∂ϵϑϰϕϱϖ";
 
-const START = "## Syntax";
+const START = "## ASCIIMath Syntax";
 const STOP = "## Differences from main ASCIIMath";
 const DEBUG_FORMULAS = process.argv.includes("--formulas");
 
@@ -122,7 +122,7 @@ async function main() {
   }
 
   print(
-    "## Syntax",
+    "## ASCIIMath Syntax",
     "",
     "ASCIIMath is a simple format: it is parsed left to right without any real",
     "operator precedence. It will simply look for 'symbols', which are short strings",

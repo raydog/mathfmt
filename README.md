@@ -11,11 +11,53 @@ browsers support it to varying degrees.
   dependencies.
 - Supports the entire ASCIIMath syntax, along with some extensions and bugfixes.
 - Compatible with server-side rendering: Unlike the official repo, we assemble
-  HTML strings instead of browser-only HTML entity objects. This means that this
+  HTML strings directly instead of leaning on browser-only HTML entity objects. This means that this
   library can be trivially embedded in contexts (such as Vue components) that
   might be called either in a browser, or in a Node.js server.
 
-## Syntax
+## Usage
+
+The library is available from NPM:
+
+```sh
+npm install mathfmt
+```
+
+Pre-built libraries are also available from the [releases](https://github.com/raydog/mathfmt/releases) page.
+
+This library provides an `intoMathML` function, that parses ASCIIMath, and produces a MathML string.
+
+```ts
+// CommonJS
+const { intoMathML } = require("mathfmt");
+
+// ES Modules
+import { intoMathML } from "mathfmt";
+
+const result = intoMathML("sum_{i=0}^oo");
+```
+
+The intoMathML function also accepts a second option argument with these attributes:
+
+| Option   | Default | Description                                                                                                                                                                                                                                                                                |
+| -------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `id`     | --      | An id string, that will be attached to the root `<math>` element in the result.                                                                                                                                                                                                            |
+| `class`  | --      | A class name, that will be attached to the root `<math>` element in the result.                                                                                                                                                                                                            |
+| `style`  | --      | A CSS style string, that will be attached to the root `<math>` element in the result. This value will be HTML-escaped, but then placed verbatim in the output. If any of the CSS values themselves are from untrusted sources, be sure to escape them.                                     |
+| `inline` | false   | Set this to true if the resulting MathML is expected to be inlined with normal text. In that case, the MathML renderer will attempt to draw certain figures in a more vertically-compact manner. The default is `false`, to draw figures in a taller (and more visually appealing) manner. |
+
+Example:
+
+```ts
+intoMathML("x = (-b +- sqrt(b^2-4ac)) / (2a)", {
+  id: "fig-123",
+  class: "math-formula",
+  inline: false,
+});
+// => '<math id="fig-123" class="math-formula" display="block"><mi>x</mi><mo>=</mo> ...'
+```
+
+## ASCIIMath Syntax
 
 ASCIIMath is a simple format: it is parsed left to right without any real
 operator precedence. It will simply look for 'symbols', which are short strings
