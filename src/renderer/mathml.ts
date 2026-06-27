@@ -225,7 +225,7 @@ function handleMatrix(ctx: RenderCtx, m: AstMatrix): Node {
       (expr, idx) =>
         new Node("mtd", [
           idx === m.aug
-            ? "<mo>\u2502</mo>" // << Unicode extra-tall "|" character
+            ? new Node("mo", ["\u2502"]) // << Unicode extra-tall "|" character
             : handleExpr(ctx, expr),
         ]),
     );
